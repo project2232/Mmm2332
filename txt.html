@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>جواز السفر الرقمي</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style id="pstyle">
+/* Layout: green passport cover → identity page (type name) → golden globe → visa pages → stamp page → certificate */
+:root{
+  --bg:#e9efeb; --paper:#fbfcf8; --page-tint:#e3efe6; --ink:#16301f; --muted:#56695c; --line:#cfdcd3;
+  --cover:#0d5a3a; --cover-deep:#073d27; --gold:#c9a24a; --gold-soft:#e6cd8a;
+  --s1:#1f7a5c; --s2:#b4473f; --s3:#3b5fb0; --s4:#8e55a8; --s5:#b9741a; --warn:#a4561b;
+  --display:"Reem Kufi","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1712; --paper:#13221a; --page-tint:#183026; --ink:#e4efe7; --muted:#9db5a6; --line:#284236;
+  --cover:#0b4a30; --cover-deep:#06301f; --gold:#d9b660; --gold-soft:#f0d995;
+  --s1:#5cc2a0; --s2:#ec8a80; --s3:#8aa8f0; --s4:#cf9be2; --s5:#f0b25a; --warn:#f0a868; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1712; --paper:#13221a; --page-tint:#183026; --ink:#e4efe7; --muted:#9db5a6; --line:#284236;
+  --cover:#0b4a30; --cover-deep:#06301f; --gold:#d9b660; --gold-soft:#f0d995;
+  --s1:#5cc2a0; --s2:#ec8a80; --s3:#8aa8f0; --s4:#cf9be2; --s5:#f0b25a; --warn:#f0a868; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75}
+.wrap{max-width:680px;margin:0 auto;padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:26px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.35}
+p{margin:0}
+.note{font-size:14px;color:var(--muted)}
+.pg{background:repeating-radial-gradient(circle at 85% 15%,transparent 0 9px,color-mix(in srgb,var(--s1) 7%,transparent) 9px 10px),linear-gradient(var(--page-tint),var(--paper));border:1px solid var(--line);border-radius:12px;position:relative;scroll-margin-top:16px}
+
+.cover{background:radial-gradient(120% 90% at 50% 30%,var(--cover),var(--cover-deep));color:var(--gold-soft);border-radius:16px 22px 22px 16px;padding:34px 24px 30px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;box-shadow:inset -10px 0 0 rgba(0,0,0,.12),0 10px 26px rgba(7,61,39,.28)}
+.cover .t1{font-family:var(--display);font-size:18px}
+.cover .emblem{width:min(150px,44vw);height:auto;margin-block:10px}
+.cover h1{font-size:clamp(30px,8vw,42px);color:var(--gold-soft)}
+.cover .en{font-family:var(--mono);letter-spacing:.32em;font-size:13px;color:var(--gold)}
+.cover .chip-ic{width:34px;height:24px;border:2px solid var(--gold);border-radius:5px;margin-top:12px;position:relative}
+.cover .chip-ic::before{content:"";position:absolute;inset:6px 10px;border:2px solid var(--gold);border-radius:50%}
+.cover .teacher{margin-top:8px;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--gold) 40%,transparent);font-family:var(--display);font-size:17px}
+.cover .sub{font-size:13px;color:var(--gold)}
+
+.data{padding:20px;display:grid;grid-template-columns:96px 1fr;gap:16px 18px;align-items:start}
+.photo{width:96px;aspect-ratio:3/4;max-width:100%;border-radius:8px;border:1px solid var(--line);background:var(--paper);display:grid;place-items:center;font-size:44px}
+.fields{display:flex;flex-direction:column;gap:10px;min-width:0}
+.lbl{font-size:12px;color:var(--muted);letter-spacing:.04em;display:block}
+select,.tin{font:inherit;font-weight:600;font-size:17px;width:100%;padding:8px 10px;border:1.5px solid var(--gold);border-radius:8px;background:var(--paper);color:var(--ink)}
+select:focus-visible,.tin:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.fields .val{font-family:var(--display);font-size:20px}
+.progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:4px}
+.progress span{display:block;height:100%;background:var(--gold);width:0;transition:width .4s}
+.mrz{grid-column:1/-1;font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--muted);direction:ltr;text-align:left;overflow-x:auto;white-space:pre;border-top:1px solid var(--line);padding-top:10px}
+
+.map{padding:22px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.map h2{font-size:22px}
+.globe-box{position:relative;width:min(340px,100%);aspect-ratio:1;max-width:100%}
+.globe-box svg{width:100%;height:100%;display:block}
+.pin{position:absolute;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;border:3px solid var(--c);background:var(--paper);display:grid;place-items:center;font-size:22px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.25);transition:transform .2s;padding:0}
+.pin:hover{transform:translate(-50%,-50%) scale(1.1)}
+.pin:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.pin.done{background:var(--c);border-color:var(--gold)}
+.pin .num{position:absolute;bottom:-8px;inset-inline-end:-6px;background:var(--gold);color:#1b1b1b;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:grid;place-items:center}
+.legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-inline-end:4px}
+
+.how{padding:20px;display:flex;flex-direction:column;gap:8px}
+.how h2{font-size:20px}
+.how ol{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:4px}
+
+#days{display:flex;flex-direction:column;gap:20px}
+.visa{overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .3s}
+.visa.flash{box-shadow:0 0 0 4px var(--gold)}
+.visa header{display:flex;gap:14px;align-items:center;padding:16px 20px;border-bottom:2px dashed var(--line)}
+.badge{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:24px;color:#fff;background:var(--c)}
+.visa header div{min-width:0;flex:1}
+.visa .day{font-size:13px;color:var(--c);font-weight:600}
+.visa h3{font-size:21px}
+.visa .pno{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.visa .body{padding:16px 20px 20px;display:flex;flex-direction:column;gap:12px}
+.visa ul{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:4px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;padding:2px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted);background:var(--paper)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.btn{font:inherit;font-weight:600;padding:10px 18px;border-radius:10px;border:2px solid var(--c,var(--cover));cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;background:var(--paper);color:var(--c,var(--cover))}
+.btn.primary{background:var(--c,var(--cover));color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.status{font-size:14px;padding:8px 12px;border-radius:8px;background:color-mix(in srgb,var(--c) 9%,var(--paper));color:var(--muted)}
+.status.ok{color:var(--c);font-weight:600}
+.code{margin:0;padding:14px 16px;border-radius:10px;background:var(--cover-deep);color:var(--gold-soft);font-family:var(--mono);font-size:14px;line-height:1.7;overflow-x:auto;text-align:left;white-space:pre}
+.msgs{display:flex;flex-direction:column;gap:8px}
+.msg{border:1px solid var(--line);border-radius:12px 12px 12px 2px;padding:10px 14px;font-size:15px;background:var(--paper)}
+.msg b{font-size:13px;color:var(--muted);display:block;font-weight:500}
+.vstamp{position:absolute;top:70px;inset-inline-start:18px;width:96px;height:96px;border-radius:50%;border:3px double var(--c);color:var(--c);display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:13px;line-height:1.25;transform:rotate(-14deg);opacity:.85;pointer-events:none;background:color-mix(in srgb,var(--paper) 60%,transparent);white-space:pre-line}
+
+.stamps{padding:20px;display:flex;flex-direction:column;gap:14px}
+.stamps h2{font-size:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:14px}
+.stamp{aspect-ratio:1;max-width:100%;border-radius:50%;display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:14px;line-height:1.3;padding:10px;border:2px dashed var(--line);color:var(--muted)}
+.stamp.on{border:3px double var(--c);color:var(--c);transform:rotate(var(--r))}
+.stamp .ico{font-size:24px;display:block}
+
+.cert{border:3px double var(--gold);border-radius:14px;padding:28px 20px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;background:var(--paper)}
+.cert h2{font-size:clamp(24px,6vw,32px);color:var(--gold)}
+.cert .who{font-family:var(--display);font-size:26px}
+
+/* teacher desk */
+.desk{padding:20px;display:flex;flex-direction:column;gap:14px;border:2px solid var(--gold)}
+.desk h2{font-size:22px}
+.addrow{display:flex;gap:8px;flex-wrap:wrap}
+.addrow .tin{flex:1 1 180px;min-width:0}
+.roster{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.row .nm{flex:1 1 120px;min-width:0;font:inherit;font-weight:600;text-align:start;background:none;border:none;color:var(--ink);cursor:pointer;text-decoration:underline dotted var(--gold);text-underline-offset:5px;padding:4px 0}
+.row .cnt{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tog{display:flex;gap:4px}
+.tog button{width:34px;height:34px;border-radius:50%;border:2px dashed var(--line);background:var(--paper);font-size:16px;cursor:pointer;padding:0;opacity:.45}
+.tog button[aria-pressed="true"]{border:2px solid var(--c);background:color-mix(in srgb,var(--c) 18%,var(--paper));opacity:1}
+.tog button:focus-visible,.row .nm:focus-visible,.del:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.del{font:inherit;font-size:13px;border:none;background:none;color:var(--warn);cursor:pointer;padding:4px 6px}
+.savebar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.dirty{color:var(--warn);font-size:14px;font-weight:600}
+footer{text-align:center;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script id="pmain">
+(function(){
+var TEACHER = "المعلمة نورة مدخلي";
+/* رابط التسليم في منصة بايونير — ضعي رابط كل مهمة هنا */
+var SUBMIT = {1:"",2:"",3:"",4:"",5:""};
+
+var DAYS = [
+  {n:1,c:"--s1",ico:"🪪",day:"المحطة الأولى",title:"دولة الهوية",x:30,y:30,
+   intro:"عرّفي بنفسك بطريقة رقمية بدون ما تكشفين معلوماتك الخاصة.",
+   steps:["صمّمي أفاتار (شخصية كرتونية) تشبهك أو بطاقة تعريف رقمية.","اكتبي فيها اسماً مستعاراً وثلاث هوايات تحبينها.","لا تضعين صورتك الحقيقية ولا رقمك ولا عنوانك."],
+   tools:"Canva أو PowerPoint",time:"١٥ دقيقة",hand:"صورة أو ملف PDF"},
+  {n:2,c:"--s2",ico:"🔐",day:"المحطة الثانية",title:"دولة الأمان",x:70,y:28,
+   intro:"اصطادي الرسائل المزيفة، واخترعي كلمة مرور قوية بطريقتك.",
+   msgs:[{f:"رسالة نصية",t:"مبروك! ربحتِ جوال جديد 🎉 اضغطي الرابط خلال ساعة: bit.ly/win-now"},
+     {f:"بريد من «الدعم الفني»",t:"حسابك بيتقفل اليوم. أرسلي كلمة المرور عشان نحميه."},
+     {f:"رسالة واتساب من رقم غريب",t:"هلا، أنا صديقة أمك، أرسلي لي الكود اللي وصلك برسالة الحين ضروري."}],
+   steps:["لكل رسالة من الثلاث فوق: اكتبي علامتين تدل أنها مزيفة.","اخترعي جملة مضحكة وحوّليها لكلمة مرور قوية (حروف كبيرة وصغيرة وأرقام ورموز). لا تستخدمينها لحساب حقيقي!"],
+   tools:"Word أو ورقة وقلم ثم صورة",time:"١٥ دقيقة",hand:"ملف أو صورة"},
+  {n:3,c:"--s3",ico:"💻",day:"المحطة الثالثة",title:"دولة البرمجة",x:50,y:52,
+   intro:"اكتبي أول برنامج بلغة بايثون يسوي لك بطاقة سفر ويرحّب فيك.",
+   steps:["افتحي محرر بايثون من الزر تحت، وامسحي الكود اللي فيه.","انسخي الكود هذا وشغّليه بزر Run، وجاوبي على الأسئلة.","التحدي: أضيفي سؤال ثالث من عندك (مثل: وش أكلتك المفضلة؟) واطبعي جوابه.","خذي تصوير شاشة يبين الكود والنتيجة."],
+   code:'name = input("وش اسمك؟ ")\ncountry = input("وش الدولة اللي تحلمين تزورينها؟ ")\n\nprint("⭐" * 10)\nprint("أهلاً يا", name, "✈️")\nprint("جوازك جاهز للسفر إلى", country)\nprint("⭐" * 10)',
+   tools:"محرر Python",link:"https://www.programiz.com/python-programming/online-compiler/",time:"٢٠ دقيقة",hand:"تصوير شاشة"},
+  {n:4,c:"--s4",ico:"🎨",day:"المحطة الرابعة",title:"دولة الإبداع",x:26,y:70,
+   intro:"صمّمي ملصقاً عن المواطنة الرقمية يفهمه أي أحد في بيتكم.",
+   steps:["اختاري نصيحة وحدة: احترام الآخرين أونلاين، أو حماية الخصوصية، أو وقت الشاشة.","صمّمي ملصقاً أو ستيكراً فيه عبارة قصيرة ورسمة أو أيقونة.","اعرضيه على أحد من أهلك واكتبي رأيه بسطر واحد."],
+   tools:"Canva",link:"https://www.canva.com/",time:"٢٠ دقيقة",hand:"صورة"},
+  {n:5,c:"--s5",ico:"🖼️",day:"المحطة الخامسة",title:"دولة المعرض",x:72,y:72,
+   intro:"آخر محطة: شاركي أحلى عمل سويتيه هذا الأسبوع، وشجعي زميلاتك.",
+   steps:["اختاري عملك المفضل من المحطات الأربع.","اكتبي سطرين: ليش اخترتيه، وش تعلمتي منه.","ارفعي العمل مع السطرين في منصة بايونير."],
+   tools:"منصة بايونير",time:"١٥ دقيقة",hand:"صورة + سطرين"}
+];
+var ROT=["-8deg","6deg","-3deg","9deg","-6deg"];
+function AR(n){return String(n).replace(/\d/g,function(d){return "٠١٢٣٤٥٦٧٨٩"[d];});}
+function el(tag,attrs,kids){var e=document.createElement(tag);attrs=attrs||{};for(var k in attrs){if(k==="text")e.textContent=attrs[k];else e.setAttribute(k,attrs[k]);}(kids||[]).forEach(function(c){if(c)e.appendChild(c);});return e;}
+
+/* ---- state: saved on the student's own device ---- */
+var me={name:"",st:[false,false,false,false,false]};
+try{var raw=JSON.parse(localStorage.getItem("pp_me")||"null");if(raw&&Array.isArray(raw.st)){me.name=String(raw.name||"");for(var k=0;k<5;k++)me.st[k]=!!raw.st[k];}}catch(e){}
+function saveMe(){try{localStorage.setItem("pp_me",JSON.stringify(me));}catch(e){}}
+function cur(){return me.name.trim()?me:null;}
+
+/* ---- static markup ---- */
+document.documentElement.setAttribute("dir","rtl");document.documentElement.setAttribute("lang","ar");
+document.getElementById("app").innerHTML=[
+'<div class="wrap">',
+'<section class="cover" aria-label="غلاف الجواز">',
+'<span class="t1">مادة المهارات الرقمية</span>',
+'<svg class="emblem" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="60" cy="60" r="44"/><ellipse cx="60" cy="60" rx="18" ry="44"/><ellipse cx="60" cy="60" rx="34" ry="44"/><path d="M16 60h88M22 38h76M22 82h76"/><circle cx="60" cy="60" r="54" stroke-dasharray="2 5"/><path d="M44 104l16 10 16-10"/></svg>',
+'<h1>جواز السفر الرقمي</h1><span class="en">DIGITAL PASSPORT</span><span class="chip-ic" aria-hidden="true"></span>',
+'<span class="teacher">'+TEACHER+'</span><span class="sub">المرحلة المتوسطة · رحلة الخمسة أيام</span>',
+'</section>',
+'<section class="pg data" id="datapage" aria-label="صفحة البيانات">',
+'<div class="photo" aria-hidden="true">🧕</div>',
+'<div class="fields"><div><label class="lbl" for="who">اسم حاملة الجواز</label><input class="tin" id="who" type="text" maxlength="60" placeholder="اكتبي اسمك هنا" autocomplete="off"><span class="note" id="whoNote"></span></div>',
+'<div><span class="lbl">الأختام</span><span class="val" id="count">٠ من ٥</span><div class="progress" aria-hidden="true"><span id="bar"></span></div><span class="note" id="left"></span></div></div>',
+'<div class="mrz" id="mrz" aria-hidden="true"></div></section>',
+'<section class="pg map" aria-labelledby="mapT"><h2 id="mapT">خريطة الرحلة</h2><p class="note">اضغطي على أي دولة في الكرة عشان تروحين لمهمتها</p>',
+'<div class="globe-box"><svg viewBox="0 0 300 300" aria-hidden="true"><defs><radialGradient id="sea" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="var(--page-tint)"/><stop offset="1" stop-color="var(--cover)"/></radialGradient></defs><circle cx="150" cy="150" r="138" fill="url(#sea)"/><g id="ggrid" fill="none" stroke="var(--gold)" stroke-width="1.2" opacity=".75"></g><circle cx="150" cy="150" r="138" fill="none" stroke="var(--gold)" stroke-width="3"/><circle cx="150" cy="150" r="146" fill="none" stroke="var(--gold)" stroke-width="1" stroke-dasharray="2 6"/></svg><div id="pins"></div></div>',
+'<div class="legend"><span><i style="background:var(--gold)"></i>مختومة</span><span><i style="border:2px solid var(--muted)"></i>باقية</span></div></section>',
+'<section class="pg how"><h2>كيف تمشي الرحلة؟</h2><ol>',
+'<li>اكتبي اسمك في صفحة البيانات فوق، وينحفظ تلقائياً.</li>',
+'<li>اقرئي مهمة الدولة، ووقتها تقريباً ١٥–٢٠ دقيقة.</li>',
+'<li>سوّي المهمة وسلّميها في منصة بايونير.</li>',
+'<li>ارجعي هنا واضغطي «تم التسليم، اختمي جوازي» ويطلع الختم.</li></ol>',
+'<p class="note">ما فيه ترتيب ولا فائزة. كل وحدة تكمل رحلتها تاخذ شهادة «مسافرة رقمية».</p></section>',
+'<div id="days"></div>',
+'<section class="pg stamps" aria-labelledby="stTitle"><h2 id="stTitle">صفحة الأختام</h2><div class="grid" id="grid"></div></section>',
+'<section class="cert" id="cert" hidden><span class="note">شهادة إتمام الرحلة</span><h2>مسافرة رقمية</h2><p>تشهد '+TEACHER+' بأن</p><p class="who" id="certName"></p><p>أتمّت رحلة جواز السفر الرقمي وزارت الدول الخمس بنجاح 🌍</p><p class="note">صوّري الشاشة وأرسليها لمعلمتك</p></section>',
+'<footer>جواز السفر الرقمي · مادة المهارات الرقمية · '+TEACHER+'</footer>',
+'</div>'].join("");
+
+/* ---- globe ---- */
+var NS="http://www.w3.org/2000/svg",g=document.getElementById("ggrid"),R=138,C=150,mer=[];
+[-60,-30,0,30,60].forEach(function(lat){var a=lat*Math.PI/180,rx=R*Math.cos(a),e=document.createElementNS(NS,"ellipse");e.setAttribute("cx",C);e.setAttribute("cy",C-R*Math.sin(a));e.setAttribute("rx",rx);e.setAttribute("ry",rx*0.12);g.appendChild(e);});
+for(var i=0;i<6;i++){var e=document.createElementNS(NS,"ellipse");e.setAttribute("cx",C);e.setAttribute("cy",C);e.setAttribute("ry",R);g.appendChild(e);mer.push(e);}
+var rot=0,still=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+function drawGlobe(){mer.forEach(function(e,i){e.setAttribute("rx",Math.abs(R*Math.cos((rot+i*30)*Math.PI/180)));});}
+drawGlobe();
+if(!still){(function tick(){rot=(rot+0.25)%180;drawGlobe();requestAnimationFrame(tick);})();}
+
+/* ---- student view ---- */
+function stamps(){return me.st;}
+function renderWho(){
+  var inp=document.getElementById("who");if(document.activeElement!==inp)inp.value=me.name;
+  document.getElementById("whoNote").textContent=me.name.trim()?"✓ اسمك محفوظ":"";
+}
+function renderPins(){
+  var box=document.getElementById("pins"),st=stamps();box.innerHTML="";
+  DAYS.forEach(function(d,i){
+    var b=el("button",{class:"pin"+(st[i]?" done":""),type:"button",style:"left:"+d.x+"%;top:"+d.y+"%;--c:var("+d.c+")","aria-label":d.title+(st[i]?" — مختومة":"")});
+    b.appendChild(el("span",{text:d.ico,"aria-hidden":"true"}));
+    b.appendChild(el("span",{class:"num",text:st[i]?"✓":AR(d.n),"aria-hidden":"true"}));
+    b.addEventListener("click",function(){var t=document.getElementById("visa"+d.n);t.scrollIntoView({behavior:still?"auto":"smooth",block:"start"});t.classList.add("flash");setTimeout(function(){t.classList.remove("flash");},1600);});
+    box.appendChild(b);
+  });
+}
+function renderDays(){
+  var box=document.getElementById("days"),st=stamps();box.innerHTML="";
+  DAYS.forEach(function(d,i){
+    var v=el("article",{class:"pg visa",id:"visa"+d.n,style:"--c:var("+d.c+")"});
+    v.appendChild(el("header",{},[el("span",{class:"badge","aria-hidden":"true",text:d.ico}),el("div",{},[el("span",{class:"day",text:d.day}),el("h3",{text:d.title})]),el("span",{class:"pno",text:"VISA · 0"+d.n})]));
+    var body=el("div",{class:"body"});
+    body.appendChild(el("p",{text:d.intro}));
+    if(d.msgs){var m=el("div",{class:"msgs"});d.msgs.forEach(function(x){var b=el("div",{class:"msg"});b.appendChild(el("b",{text:x.f}));b.appendChild(document.createTextNode(x.t));m.appendChild(b);});body.appendChild(m);}
+    var ul=el("ul");d.steps.forEach(function(s){ul.appendChild(el("li",{text:s}));});body.appendChild(ul);
+    if(d.code){var pre=el("pre",{class:"code",dir:"ltr"});pre.appendChild(el("code",{text:d.code}));
+      var cp=el("button",{class:"btn",type:"button",text:"انسخي الكود"});
+      cp.addEventListener("click",function(){var done=function(){cp.textContent="✓ انسخ";setTimeout(function(){cp.textContent="انسخي الكود";},1800);};
+        try{navigator.clipboard.writeText(d.code).then(done,function(){selectPre(pre);});}catch(e){selectPre(pre);}});
+      body.appendChild(pre);body.appendChild(el("div",{class:"actions"},[cp]));}
+    body.appendChild(el("div",{class:"meta"},[el("span",{class:"chip",text:"⏱ "+d.time}),el("span",{class:"chip",text:"🛠 "+d.tools}),el("span",{class:"chip",text:"📎 "+d.hand})]));
+    var act=el("div",{class:"actions"});
+    if(d.link)act.appendChild(el("a",{class:"btn",href:d.link,target:"_blank",rel:"noopener",text:"افتحي "+d.tools}));
+    if(SUBMIT[d.n])act.appendChild(el("a",{class:"btn primary",href:SUBMIT[d.n],target:"_blank",rel:"noopener",text:"سلّمي مهمتك في بايونير"}));
+    var sb=el("button",{class:"btn"+(st[i]?"":" primary"),type:"button","aria-pressed":st[i]?"true":"false",text:st[i]?"✓ انختم جوازك":"تم التسليم، اختمي جوازي"});
+    sb.addEventListener("click",function(){
+      if(!me.name.trim()){var w=document.getElementById("who");document.getElementById("datapage").scrollIntoView({behavior:still?"auto":"smooth",block:"start"});w.focus();document.getElementById("whoNote").textContent="اكتبي اسمك أول عشان نختم جوازك";return;}
+      me.st[i]=!me.st[i];saveMe();renderStudent();
+      var t=document.getElementById("visa"+d.n);if(t)t.scrollIntoView({block:"nearest"});});
+    act.appendChild(sb);
+    body.appendChild(act);
+    body.appendChild(el("p",{class:"status"+(st[i]?" ok":""),text:st[i]?"✓ تم الدخول لهذي الدولة. لو ضغطتيه بالغلط اضغطي مرة ثانية يتشال الختم.":"سلّمي مهمتك في منصة بايونير، وبعدها اضغطي الزر."}));
+    v.appendChild(body);
+    if(st[i])v.appendChild(el("div",{class:"vstamp","aria-hidden":"true",text:"✓ تم الدخول\n"+d.title}));
+    box.appendChild(v);
+  });
+}
+function selectPre(p){try{var r=document.createRange();r.selectNodeContents(p);var s=getSelection();s.removeAllRanges();s.addRange(r);}catch(e){}}
+function renderStamps(){
+  var gr=document.getElementById("grid"),st=stamps(),n=0,s=cur();gr.innerHTML="";
+  DAYS.forEach(function(d,i){if(st[i])n++;
+    var x=el("div",{class:"stamp"+(st[i]?" on":""),style:"--c:var("+d.c+");--r:"+ROT[i]});
+    x.appendChild(el("div",{},[el("span",{class:"ico",text:st[i]?d.ico:"·"}),document.createTextNode(d.title)]));gr.appendChild(x);});
+  document.getElementById("bar").style.width=(n/5*100)+"%";
+  document.getElementById("count").textContent=AR(n)+" من ٥";
+  document.getElementById("left").textContent=!s?"اختاري اسمك عشان تشوفين أختامك":(n===5?"كملتِ الرحلة كاملة! 🎉 شهادتك تحت.":"باقي لك "+AR(5-n)+" "+((5-n)===1?"ختم":"أختام"));
+  document.getElementById("cert").hidden=!(s&&n===5);
+  document.getElementById("certName").textContent=s?s.name:"";
+  document.getElementById("mrz").textContent="P<DGT<DIGITAL<<PASSPORT<<<<<<<<<<<<<<<<<\nSTAMPS<0"+n+"<OF<05<<<<<<<<<<<<<<<<<<<<<<<<<<";
+}
+function renderStudent(){renderWho();renderPins();renderDays();renderStamps();}
+document.getElementById("who").addEventListener("input",function(){me.name=this.value.slice(0,60);saveMe();renderWho();renderStamps();});
+
+renderStudent();
+})();
+</script>
+
+</body>
+</html>
